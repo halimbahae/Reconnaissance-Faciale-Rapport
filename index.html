@@ -1,351 +1,330 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infographie : La Reconnaissance Faciale à la Croisée des Chemins</title>
+    <!-- Chosen Palette: Calm Neutrality -->
+    <!-- Application Structure Plan: The SPA is designed as a single-page narrative scroll, moving from global context to the Moroccan dilemma and finally to solutions. Instead of mirroring the report's linear chapters, it uses a thematic, interactive structure. The core is a dynamic dashboard comparing the three models (China, US, Morocco) via user-activated tabs, making the comparison more engaging than a static table. This is followed by sections on universal risks (bias, function creep) visualized with charts and diagrams. The final section presents the recommendations in a clear, tabbed layout (Legal, Ethical, Technical) to make them actionable. This structure is chosen to transform the dense report into a compelling, easy-to-digest story for policymakers and the public, prioritizing understanding and engagement over simple information transfer. -->
+    <!-- Visualization & Content Choices: Global models are compared using an interactive tabbed dashboard with Chart.js bar charts, which is more engaging than the report's static table. Algorithmic bias is shown with a Chart.js horizontal bar chart for high visual impact. Morocco's readiness is assessed with a Chart.js radar chart, ideal for displaying multi-faceted data. The 'function creep' risk and China's social credit are visualized as simple, clear process diagrams using HTML/CSS/Tailwind. Recommendations are organized in a tabbed interface for clarity and actionability. Key stats like project costs are highlighted in 'Big Number' cards. All choices prioritize clarity, interaction, and narrative flow over simple data dumping. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>Analyse Interactive : La Reconnaissance Faciale</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
+            background-color: #FDFDFB;
+            font-family: 'Lato', sans-serif;
+            color: #383838;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
         }
         .chart-container {
             position: relative;
-            margin: auto;
-            height: 350px;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
         }
-        .kpi-card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
         }
-        .text-accent { color: #6FB1FC; }
-        .bg-accent { background-color: #0052D4; }
-        .border-accent { border-color: #4364F7; }
-        h1, h2, h3 { font-weight: 900; }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link.active {
+            color: #C06014;
+            border-bottom-color: #C06014;
+        }
+        .tab-btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab-btn.active {
+            background-color: #383838;
+            color: #FDFDFB;
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center items-center h-16">
+                <div class="flex space-x-4 md:space-x-8 text-sm md:text-base">
+                    <a href="#intro" class="nav-link py-2 border-b-2 border-transparent">Introduction</a>
+                    <a href="#dashboard" class="nav-link py-2 border-b-2 border-transparent">Comparatif</a>
+                    <a href="#risks" class="nav-link py-2 border-b-2 border-transparent">Les Risques</a>
+                    <a href="#morocco" class="nav-link py-2 border-b-2 border-transparent">Focus Maroc</a>
+                    <a href="#recommendations" class="nav-link py-2 border-b-2 border-transparent">Recommandations</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <header class="text-center my-12">
-            <h1 class="text-4xl md:text-6xl font-black mb-4">La Reconnaissance Faciale</h1>
-            <h2 class="text-2xl md:text-3xl text-accent">Quel Visage pour le Maroc ?</h2>
-            <p class="max-w-3xl mx-auto mt-4 text-gray-400">
-                Une analyse visuelle des modèles de gouvernance de la reconnaissance faciale et des enjeux stratégiques pour le Maroc, à la veille d'une transformation technologique majeure.
+    <main class="container mx-auto p-4 md:px-8">
+
+        <section id="intro" class="text-center py-16 md:py-24">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">La Reconnaissance Faciale</h1>
+            <h2 class="text-2xl md:text-3xl text-[#C06014] mb-8">Un choix de société à la croisée des chemins</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                Cette analyse interactive explore les modèles de gouvernance de la reconnaissance faciale (TRF) et les enjeux stratégiques pour le Maroc. Entre promesses de sécurité et risques de surveillance, quelle voie le Royaume choisira-t-il ?
             </p>
-        </header>
-
-        <section id="comparison" class="my-16">
-            <h3 class="text-3xl text-center mb-2">Trois Modèles, Trois Destinées</h3>
-            <p class="text-center text-gray-400 mb-8 max-w-2xl mx-auto">La gouvernance de la reconnaissance faciale varie drastiquement, reflétant des choix de société fondamentaux entre contrôle, liberté et modernisation.</p>
-            <div class="kpi-card rounded-lg p-6">
-                <div class="chart-container h-96">
-                    <canvas id="modelComparisonChart"></canvas>
-                </div>
-            </div>
         </section>
 
-        <section id="china" class="my-20">
-             <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div class="order-2 md:order-1">
-                    <h3 class="text-3xl mb-4">Le Modèle Chinois : L'Œil Totalitaire</h3>
-                    <p class="text-gray-400 mb-6">En Chine, la reconnaissance faciale n'est pas un simple outil de sécurité, mais la pierre angulaire d'un système de contrôle social et de gouvernance algorithmique. Le Système de Crédit Social en est l'exemple le plus frappant, notant les citoyens pour façonner leur comportement.</p>
-                     <div class="kpi-card rounded-lg p-6">
-                        <h4 class="font-bold text-xl mb-2">Le Système de Crédit Social</h4>
-                        <p class="text-sm text-gray-400 mb-4">Un circuit fermé où les actions quotidiennes, surveillées par la TRF, entraînent des récompenses ou des punitions, allant de l'accès facilité aux prêts à l'interdiction de voyager.</p>
-                        <div class="space-y-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="bg-gray-700 text-white rounded-full h-10 w-10 flex items-center justify-center font-bold">1</div>
-                                <div><span class="font-bold">Actions</span> (ex: infraction, bénévolat)</div>
-                                <div class="text-accent text-2xl">&rarr;</div>
-                                <div class="font-bold">Score +/-</div>
-                            </div>
-                             <div class="flex items-center space-x-4">
-                                <div class="bg-gray-700 text-white rounded-full h-10 w-10 flex items-center justify-center font-bold">2</div>
-                                <div><span class="font-bold">Conséquences</span> (ex: privilèges, sanctions)</div>
-                                <div class="text-accent text-2xl">&rarr;</div>
-                                <div>Contrôle Social</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-1 md:order-2 kpi-card rounded-lg p-6">
-                     <h4 class="font-bold text-xl mb-2 text-center">Une Loi en Trompe-l'œil</h4>
-                     <p class="text-sm text-gray-400 mb-4 text-center">Malgré une loi de 2025 protégeant la vie privée, des exemptions massives pour la "sécurité publique" et la R&D donnent un pouvoir quasi illimité à l'État.</p>
-                    <div class="chart-container h-64">
-                        <canvas id="chinaLawChart"></canvas>
-                    </div>
+        <div class="bg-gray-100 rounded-xl p-6 md:p-10 my-16" id="dashboard">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold">Tableau de Bord Comparatif</h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Explorez trois approches de la TRF en cliquant sur chaque modèle. Observez comment l'équilibre entre contrôle étatique, libertés civiles et cadre légal varie radicalement d'un contexte à l'autre.</p>
+            </div>
+
+            <div class="flex justify-center mb-8">
+                <div class="flex space-x-2 p-1 bg-gray-200 rounded-lg">
+                    <button class="tab-btn px-4 py-2 text-sm md:text-base font-semibold rounded-md" data-target="china">Chine</button>
+                    <button class="tab-btn px-4 py-2 text-sm md:text-base font-semibold rounded-md" data-target="usa">États-Unis</button>
+                    <button class="tab-btn px-4 py-2 text-sm md:text-base font-semibold rounded-md" data-target="morocco">Maroc</button>
                 </div>
             </div>
-        </section>
 
-        <hr class="border-t border-gray-700 my-12">
+            <div id="dashboard-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Content will be injected by JS -->
+            </div>
+        </div>
 
-        <section id="usa" class="my-20">
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div>
-                     <h3 class="text-3xl mb-4">Le Modèle Américain : La Liberté Contestée</h3>
-                    <p class="text-gray-400 mb-6">Aux États-Unis, l'usage de la TRF par la police est un champ de bataille. Des études révèlent des biais discriminatoires alarmants, alimentant une forte contestation citoyenne qui force les autorités à la transparence et à la régulation.</p>
-                     <div class="kpi-card rounded-lg p-6 mt-6">
-                        <h4 class="font-bold text-xl mb-2">Politique du LAPD : Une Piste Seulement</h4>
-                         <p class="text-sm text-gray-400 mb-4">Face à la pression, le LAPD a adopté une règle clé : une correspondance de TRF n'est jamais une preuve, mais une simple "piste d'enquête" qui exige une vérification humaine rigoureuse.</p>
-                        <div class="flex items-center justify-around text-center text-sm">
-                            <div>Image Suspecte</div>
-                            <div class="text-accent text-2xl font-mono">&rarr;</div>
-                            <div class="border-2 border-dashed border-accent p-2 rounded">TRF<br/>(Piste d'enquête)</div>
-                            <div class="text-accent text-2xl font-mono">&rarr;</div>
-                            <div>Vérification Humaine<br/>& Enquête</div>
-                             <div class="text-accent text-2xl font-mono">&rarr;</div>
-                            <div>Action Policière</div>
-                        </div>
-                    </div>
-                </div>
-                 <div class="kpi-card rounded-lg p-6">
-                    <h4 class="font-bold text-xl mb-2 text-center">Le Biais Algorithmique en Chiffres</h4>
-                    <p class="text-sm text-gray-400 mb-4 text-center">L'étude "Gender Shades" du MIT a démontré que les algorithmes se trompent massivement plus souvent sur les femmes à la peau foncée.</p>
-                    <div class="chart-container h-80">
+
+        <section id="risks" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Les Risques Universels de la TRF</h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Au-delà des frontières, la technologie de reconnaissance faciale porte en elle des risques systémiques. Comprendre ces dangers est la première étape pour les maîtriser.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4">Le Biais Algorithmique : Une Discrimination en Code</h3>
+                    <p class="text-gray-600 mb-6">Les algorithmes ne sont pas neutres. Des études, comme celle du MIT, prouvent qu'ils sont nettement moins précis pour identifier les femmes et les personnes de couleur, créant un risque élevé d'erreurs judiciaires et de renforcement des discriminations existantes.</p>
+                    <div class="chart-container h-[300px] md:h-[350px]">
                         <canvas id="biasChart"></canvas>
                     </div>
                 </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4">Le Piège du "Glissement de Fonction"</h3>
+                    <p class="text-gray-600 mb-6">Les grands événements, comme la CAN 2025 et le Mondial 2030, justifient le déploiement de technologies de sécurité. Le risque majeur est que ces outils, une fois en place, soient utilisés de manière permanente pour surveiller la population, bien après la fin des festivités.</p>
+                    <div class="space-y-4 text-center mt-12">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <span class="font-bold text-lg">CAN 2025 / Mondial 2030</span>
+                        </div>
+                        <div class="text-3xl text-[#C06014]">▼</div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <span class="font-bold text-lg">Déploiement Massif de TRF "Temporaire"</span>
+                        </div>
+                        <div class="text-3xl text-[#C06014]">▼</div>
+                        <div class="p-4 bg-red-100 border-l-4 border-red-500 rounded-lg">
+                            <span class="font-bold text-lg text-red-700">Risque : Normalisation de la Surveillance Permanente</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <hr class="border-t border-gray-700 my-12">
 
-        <section id="morocco" class="my-20">
-            <h3 class="text-3xl text-center mb-2">Le Maroc : La Croisée des Chemins</h3>
-            <p class="text-center text-gray-400 mb-8 max-w-2xl mx-auto">Engagé dans une modernisation rapide avec ses projets de "Smart Cities", le Maroc déploie des infrastructures de surveillance de pointe, mais dans un quasi-vide juridique qui crée des risques majeurs.</p>
-
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                 <div class="kpi-card rounded-lg p-6">
-                     <h4 class="font-bold text-xl mb-2 text-center">État de Préparation du Maroc</h4>
-                     <p class="text-sm text-gray-400 mb-4 text-center">L'analyse révèle un décalage : un déploiement technologique rapide face à un cadre légal et un débat public encore embryonnaires.</p>
+        <section id="morocco" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Focus : Le Maroc à la Croisée des Chemins</h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Engagé dans une modernisation rapide, le Maroc déploie des infrastructures de pointe. Mais le cadre légal et le débat public sont-ils prêts pour cette révolution ?</p>
+            </div>
+             <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                     <h3 class="text-2xl font-bold mb-4 text-center">Niveau de Préparation du Maroc</h3>
+                     <p class="text-gray-600 mb-6 text-center">Le graphique révèle un fort contraste : un investissement technologique très avancé face à un cadre juridique et un débat public encore embryonnaires. Ce décalage est au cœur des risques actuels.</p>
                     <div class="chart-container">
                         <canvas id="moroccoRadarChart"></canvas>
                     </div>
                 </div>
-                <div>
-                     <div class="kpi-card rounded-lg p-6 mb-6">
-                        <div class="text-5xl font-black text-accent">108+ M</div>
-                        <div class="text-lg font-bold">de dirhams</div>
-                        <p class="text-gray-400 mt-2">C'est le coût de l'infrastructure de surveillance prévue pour la seule ville de Rabat, incluant des caméras dotées de TRF.</p>
+                 <div class="space-y-8">
+                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <div class="text-5xl font-bold text-[#C06014]">108+ M</div>
+                        <div class="text-lg font-bold text-gray-700">de dirhams</div>
+                        <p class="text-gray-600 mt-2">C'est le coût de l'infrastructure de surveillance prévue pour la seule ville de Rabat, incluant des caméras dotées de capacités de TRF.</p>
                     </div>
-                    <div class="kpi-card rounded-lg p-6">
-                        <h4 class="font-bold text-xl mb-2">Le Piège du "Glissement de Fonction"</h4>
-                        <p class="text-gray-400">Les grands événements comme la CAN 2025 et le Mondial 2030 justifient le déploiement de technologies de sécurité. Le risque est que ces outils, une fois en place, soient utilisés de manière permanente pour la surveillance de la population.</p>
-                        <div class="mt-4 border-l-4 border-accent pl-4">
-                            <p class="font-bold">CAN 2025 & Mondial 2030 &rarr; Déploiement Massif de TRF &rarr; <span class="text-red-500">Normalisation de la Surveillance Post-Événements ?</span></p>
-                        </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold mb-4">Un Vide Juridique à Combler</h3>
+                        <p class="text-gray-600">La loi 09-08, bien que fondatrice, est dépassée. Elle ne traite pas spécifiquement des données biométriques et ses principes (consentement, finalité) sont difficiles à appliquer à la surveillance de masse, laissant un flou dangereux que la CNDP tente de gérer.</p>
                     </div>
+                 </div>
+            </div>
+        </section>
+        
+
+        <section id="recommendations" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold">Le Chemin à Suivre : Recommandations Stratégiques</h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Pour construire un modèle souverain qui allie innovation et respect des droits, voici une feuille de route articulée autour de trois axes complémentaires.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="flex justify-center border-b border-gray-300">
+                    <button class="rec-tab-btn flex-1 p-4 text-lg font-semibold text-center border-b-4 border-transparent" data-rec-target="legal">⚖️ Juridique</button>
+                    <button class="rec-tab-btn flex-1 p-4 text-lg font-semibold text-center border-b-4 border-transparent" data-rec-target="ethical">🏛️ Éthique</button>
+                    <button class="rec-tab-btn flex-1 p-4 text-lg font-semibold text-center border-b-4 border-transparent" data-rec-target="technical">⚙️ Technique</button>
+                </div>
+                <div class="mt-8">
+                    <div id="legal-rec" class="rec-content grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+                    <div id="ethical-rec" class="rec-content grid grid-cols-1 sm:grid-cols-2 gap-6 hidden"></div>
+                    <div id="technical-rec" class="rec-content grid grid-cols-1 sm:grid-cols-2 gap-6 hidden"></div>
                 </div>
             </div>
         </section>
 
-        <section id="recommendations" class="my-20">
-            <h3 class="text-3xl text-center mb-2">Recommandations pour un Avenir Maîtrisé</h3>
-            <p class="text-center text-gray-400 mb-8 max-w-2xl mx-auto">Pour naviguer cette transition, le Maroc peut adopter un cadre robuste alliant innovation et respect des droits fondamentaux.</p>
+    </main>
 
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="kpi-card rounded-lg p-6">
-                    <div class="text-4xl mb-4">⚖️</div>
-                    <h4 class="font-bold text-xl mb-2">Axe Juridique</h4>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Adopter une loi spécifique aux données biométriques.</li>
-                        <li>Rendre obligatoire l'Évaluation d'Impact Algorithmique (EIA).</li>
-                        <li>Renforcer les pouvoirs de la CNDP.</li>
-                    </ul>
-                </div>
-                 <div class="kpi-card rounded-lg p-6">
-                    <div class="text-4xl mb-4">🏛️</div>
-                    <h4 class="font-bold text-xl mb-2">Axe Éthique & Gouvernance</h4>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Instaurer un moratoire sur l'usage de la TRF par la police.</li>
-                        <li>Créer un Comité National d'Éthique du Numérique.</li>
-                        <li>Exiger une transparence radicale via un registre public.</li>
-                    </ul>
-                </div>
-                 <div class="kpi-card rounded-lg p-6">
-                    <div class="text-4xl mb-4">⚙️</div>
-                    <h4 class="font-bold text-xl mb-2">Axe Technique</h4>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Imposer le "Privacy by Design" dans les marchés publics.</li>
-                        <li>Exiger des audits de biais et de précision indépendants.</li>
-                        <li>Garantir une supervision humaine significative.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <footer class="text-center text-gray-500 text-sm mt-20 pb-8">
-            <p>Cette infographie est basée sur le rapport "La Reconnaissance Faciale à la Croisée des Chemins".</p>
-            <p>Conception et Développement par Canvas Infographics.</p>
-        </footer>
-
-    </div>
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto py-8 px-4 text-center text-gray-400 text-sm">
+            <p>Cette application est une synthèse interactive du rapport "La Reconnaissance Faciale à la Croisée des Chemins".</p>
+            <p>&copy; 2025 - Conçu pour l'analyse et la prise de décision éclairée.</p>
+        </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const wrapLabel = (str, maxWidth) => {
-                if (str.length <= maxWidth) {
-                    return str;
-                }
-                const words = str.split(' ');
-                let lines = [];
-                let currentLine = '';
-                for (const word of words) {
-                    if ((currentLine + ' ' + word).length > maxWidth && currentLine.length > 0) {
-                        lines.push(currentLine);
-                        currentLine = word;
-                    } else {
-                        if (currentLine.length > 0) {
-                            currentLine += ' ' + word;
-                        } else {
-                            currentLine = word;
-                        }
-                    }
-                }
-                lines.push(currentLine);
-                return lines;
-            };
 
-            const tooltipCallbacks = {
-                title: function(tooltipItems) {
-                    const item = tooltipItems[0];
-                    let label = item.chart.data.labels[item.dataIndex];
-                    if (Array.isArray(label)) {
-                        return label.join(' ');
-                    }
-                    return label;
-                }
-            };
-            
-            const brilliantBlues = {
-                primary: '#0052D4',
-                secondary: '#4364F7',
-                accent: '#6FB1FC',
-                danger: '#F87171',
-                text: '#c9d1d9'
-            };
-
-            const chartOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: brilliantBlues.text
-                        }
-                    },
-                    tooltip: {
-                        callbacks: tooltipCallbacks
+            const dashboardData = {
+                china: {
+                    title: "Chine : La Surveillance comme Outil de Gouvernance",
+                    description: "La TRF est au cœur du Système de Crédit Social, un projet d'ingénierie sociale visant à contrôler et façonner les comportements. La loi, bien que protégeant les citoyens face au privé, offre des exemptions quasi-illimitées à l'État pour la 'sécurité publique' et la R&D.",
+                    chartData: {
+                        labels: ["Contrôle Étatique", "Libertés Publiques", "Cadre Légal (contre l'État)"],
+                        values: [95, 10, 20]
                     }
                 },
-                scales: {
-                    y: {
-                        ticks: { color: brilliantBlues.text },
-                        grid: { color: 'rgba(201, 209, 217, 0.2)' }
-                    },
-                    x: {
-                        ticks: { color: brilliantBlues.text },
-                        grid: { color: 'rgba(201, 209, 217, 0.1)' }
+                usa: {
+                    title: "États-Unis : Un Équilibre Fragile et Contesté",
+                    description: "L'usage de la TRF par la police est encadré par des politiques locales (ex: LAPD) qui la cantonnent à une 'piste d'enquête'. Cependant, les biais algorithmiques et la mobilisation d'une société civile très active créent une tension permanente.",
+                    chartData: {
+                        labels: ["Contrôle Étatique", "Libertés Publiques", "Cadre Légal (contre l'État)"],
+                        values: [40, 85, 60]
+                    }
+                },
+                morocco: {
+                    title: "Maroc : Entre Ambition et Incertitude",
+                    description: "Le Maroc investit massivement dans des technologies de surveillance de pointe pour ses 'Smart Cities' et ses grands événements. Cet élan technologique se produit dans un relatif vide juridique, créant un risque élevé de 'glissement de fonction' et de surveillance de fait.",
+                    chartData: {
+                        labels: ["Contrôle Étatique", "Libertés Publiques", "Cadre Légal (contre l'État)"],
+                        values: [65, 30, 25]
                     }
                 }
             };
 
-            const createModelComparisonChart = () => {
-                const ctx = document.getElementById('modelComparisonChart').getContext('2d');
+            const recommendationsData = {
+                legal: [
+                    { title: "Loi Spécifique Biométrie", content: "Adopter une loi dédiée aux données biométriques, reconnaissant leur caractère unique et interdisant leur traitement sauf exceptions très strictes." },
+                    { title: "Finalités Limitées", content: "Encadrer précisément l'usage étatique. Interdire la TRF en temps réel dans l'espace public par principe, sauf mandat judiciaire pour une menace imminente." },
+                    { title: "Évaluation d'Impact (EIA)", content: "Rendre obligatoire une Évaluation d'Impact Algorithmique publique avant tout déploiement, pour analyser les risques sur les droits fondamentaux." },
+                    { title: "Renforcer la CNDP", content: "Doter la CNDP de pouvoirs de sanction directs et dissuasifs, et de moyens d'audit contraignants sur toutes les administrations." }
+                ],
+                ethical: [
+                    { title: "Moratoire National", content: "Instaurer un moratoire sur l'usage de la TRF par les forces de l'ordre jusqu'à l'adoption d'un cadre juridique et la tenue d'un débat public." },
+                    { title: "Comité d'Éthique", content: "Créer un Comité National d'Éthique du Numérique, indépendant et multidisciplinaire, pour émettre des avis publics sur les projets de surveillance." },
+                    { title: "Transparence Radicale", content: "Créer un registre public en ligne de tous les systèmes de TRF utilisés par l'État, détaillant leur finalité, leurs audits et leurs statistiques d'usage." },
+                    { title: "Protéger la Société Civile", content: "Garantir un environnement sûr pour les journalistes, chercheurs et militants qui enquêtent et critiquent l'usage de ces technologies." }
+                ],
+                technical: [
+                    { title: "Privacy by Design", content: "Inscrire le 'Privacy by Design' (protection de la vie privée dès la conception) comme obligation légale dans tous les marchés publics de surveillance." },
+                    { title: "Audits de Biais Indépendants", content: "Mandater des tests rigoureux des algorithmes sur des données représentatives de la population marocaine. Rendre les résultats publics." },
+                    { title: "Supervision Humaine", content: "Interdire toute décision 100% automatisée ayant un impact juridique. Un humain qualifié et formé doit toujours prendre la décision finale." },
+                    { title: "Cybersécurité Maximale", content: "Imposer les normes de sécurité les plus élevées pour le stockage et la transmission des données biométriques, avec des durées de conservation limitées." }
+                ]
+            };
+
+
+            const dashboardContent = document.getElementById('dashboard-content');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            let comparisonChart = null;
+
+            function updateDashboard(model) {
+                const data = dashboardData[model];
+                dashboardContent.innerHTML = `
+                    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-1">
+                        <h3 class="text-2xl font-bold mb-3">${data.title}</h3>
+                        <p class="text-gray-600">${data.description}</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                `;
+                createComparisonChart(data.chartData);
+            }
+
+            function createComparisonChart(data) {
+                const ctx = document.getElementById('comparisonChart').getContext('2d');
+                if (comparisonChart) {
+                    comparisonChart.destroy();
+                }
+                comparisonChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Niveau (sur 100)',
+                            data: data.values,
+                            backgroundColor: ['#383838', '#5A8F7B', '#C06014'],
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { title: (items) => items[0].label } }
+                        },
+                        scales: {
+                             x: { max: 100, ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                             y: { ticks: { color: '#383838', font: { weight: 'bold' } }, grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    updateDashboard(button.dataset.target);
+                });
+            });
+
+            const createBiasChart = () => {
+                const ctx = document.getElementById('biasChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ['Chine', 'États-Unis (LA)', 'Maroc'],
-                        datasets: [
-                            {
-                                label: 'Contrôle Étatique',
-                                data: [95, 40, 65],
-                                backgroundColor: brilliantBlues.primary,
-                            },
-                            {
-                                label: 'Force de la Société Civile',
-                                data: [10, 85, 30],
-                                backgroundColor: brilliantBlues.accent,
-                            },
-                             {
-                                label: 'Robustesse du Cadre Légal',
-                                data: [20, 60, 25],
-                                backgroundColor: brilliantBlues.danger,
-                            }
-                        ]
-                    },
-                    options: chartOptions
-                });
-            };
-
-            const createChinaLawChart = () => {
-                const ctx = document.getElementById('chinaLawChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Protections pour les citoyens (face aux entreprises)', 'Exemptions pour l\'État (Sécurité & R&D)'],
+                        labels: ['Femmes (Peau foncée)', 'Hommes (Peau claire)'],
                         datasets: [{
-                            data: [60, 40],
-                            backgroundColor: [brilliantBlues.accent, brilliantBlues.danger],
-                            borderColor: '#161b22',
-                            borderWidth: 4
+                            label: "Taux d'erreur (%)",
+                            data: [34.7, 0.8],
+                            backgroundColor: ['#D9534F', '#5A8F7B'],
+                            borderRadius: 4
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    color: brilliantBlues.text,
-                                    padding: 20
-                                }
-                            },
-                            tooltip: {
-                                callbacks: tooltipCallbacks
-                            }
-                        }
-                    }
-                });
-            };
-
-            const createBiasChart = () => {
-                const ctx = document.getElementById('biasChart').getContext('2d');
-                const rawLabels = ['Femmes (Peau foncée)', 'Hommes (Peau claire)'];
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: rawLabels.map(l => wrapLabel(l, 16)),
-                        datasets: [{
-                            label: "Taux d'erreur d'identification (%)",
-                            data: [34.7, 0.8],
-                            backgroundColor: [brilliantBlues.danger, brilliantBlues.accent],
-                        }]
-                    },
-                    options: {
-                        ...chartOptions,
-                        indexAxis: 'y',
+                             legend: { display: false },
+                             tooltip: { callbacks: { title: (items) => items[0].label } }
+                        },
                         scales: {
-                           y: {
-                                ticks: { color: brilliantBlues.text },
-                                grid: { color: 'rgba(201, 209, 217, 0.1)' }
-                            },
-                           x: {
-                                ticks: { color: brilliantBlues.text },
-                                grid: { color: 'rgba(201, 209, 217, 0.2)' }
-                            }
+                           x: { ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                           y: { ticks: { color: '#383838' }, grid: { display: false } }
                         }
                     }
                 });
@@ -353,58 +332,96 @@
 
             const createMoroccoRadarChart = () => {
                 const ctx = document.getElementById('moroccoRadarChart').getContext('2d');
-                const rawLabels = ['Déploiement Technologique', 'Cadre Juridique Spécifique', 'Débat Public Informé', 'Contre-pouvoirs Citoyens', 'Transparence des Projets'];
                 new Chart(ctx, {
                     type: 'radar',
                     data: {
-                        labels: rawLabels.map(l => wrapLabel(l, 16)),
+                        labels: ['Déploiement Tech', 'Cadre Juridique', 'Débat Public', 'Contre-pouvoirs', 'Transparence'],
                         datasets: [{
-                            label: 'Niveau de Maturité',
+                            label: 'Niveau de Maturité (sur 100)',
                             data: [80, 20, 15, 30, 10],
                             fill: true,
-                            backgroundColor: 'rgba(0, 82, 212, 0.4)',
-                            borderColor: brilliantBlues.primary,
-                            pointBackgroundColor: brilliantBlues.primary,
+                            backgroundColor: 'rgba(90, 143, 123, 0.2)',
+                            borderColor: '#5A8F7B',
+                            pointBackgroundColor: '#5A8F7B',
                             pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: brilliantBlues.primary
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                             legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: tooltipCallbacks
-                            }
+                             legend: { display: false },
+                             tooltip: { callbacks: { title: (items) => items[0].label } }
                         },
                         scales: {
                             r: {
-                                angleLines: { color: 'rgba(201, 209, 217, 0.2)' },
-                                grid: { color: 'rgba(201, 209, 217, 0.2)' },
-                                pointLabels: {
-                                    color: brilliantBlues.text,
-                                    font: {
-                                        size: 11
-                                    }
-                                },
-                                ticks: {
-                                    backdropColor: 'rgba(0,0,0,0)',
-                                    color: brilliantBlues.text
-                                }
+                                angleLines: { color: '#e5e7eb' },
+                                grid: { color: '#e5e7eb' },
+                                pointLabels: { color: '#383838', font: { size: 12 } },
+                                ticks: { display: false },
+                                suggestedMin: 0,
+                                suggestedMax: 100
                             }
                         }
                     }
                 });
             };
             
-            createModelComparisonChart();
-            createChinaLawChart();
+            const recTabButtons = document.querySelectorAll('.rec-tab-btn');
+            const recContents = document.querySelectorAll('.rec-content');
+
+            function populateRecommendations() {
+                Object.keys(recommendationsData).forEach(key => {
+                    const container = document.getElementById(`${key}-rec`);
+                    const data = recommendationsData[key];
+                    container.innerHTML = data.map(item => `
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="font-bold text-lg text-gray-800 mb-2">${item.title}</h4>
+                            <p class="text-gray-600 text-sm">${item.content}</p>
+                        </div>
+                    `).join('');
+                });
+            }
+
+            recTabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    recTabButtons.forEach(btn => btn.classList.remove('active', 'text-[#C06014]', 'border-[#C06014]'));
+                    button.classList.add('active', 'text-[#C06014]', 'border-[#C06014]');
+
+                    recContents.forEach(content => content.classList.add('hidden'));
+                    document.getElementById(`${button.dataset.recTarget}-rec`).classList.remove('hidden');
+                });
+            });
+
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            function onScroll() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', onScroll);
+
+            tabButtons[0].click();
+            recTabButtons[0].click();
             createBiasChart();
             createMoroccoRadarChart();
+            populateRecommendations();
+            onScroll();
         });
     </script>
 </body>
